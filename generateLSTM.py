@@ -46,7 +46,11 @@ print(y.shape) #(144243, 43)
 #create the LSTM model
 model = Sequential()
 model.add(LSTM(output_dim= 256,
-               input_shape=(X.shape[1], X.shape[2]))) #  input_length=100, input_dim=1
+               input_shape=(X.shape[1], X.shape[2])
+               ,return_sequences= True
+               )) #  input_length=100, input_dim=1
+model.add(Dropout(0.2))
+model.add(LSTM(256))
 model.add(Dropout(0.2))
 model.add(Dense(y.shape[1], activation= 'softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam')
@@ -55,6 +59,6 @@ filepath="my_model_weights.hdf5"
 checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
 callbacks_list = [checkpoint]
 
-model.fit(X, y, nb_epoch=20, batch_size=128, callbacks=callbacks_list)
+model.fit(X, y, nb_epoch=2, batch_size=128, callbacks=callbacks_list)
 
 
